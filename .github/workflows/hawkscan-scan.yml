@@ -32,10 +32,11 @@ jobs:
       - name: Run javaspringvulny
         run:  docker compose up -d
       - name: Run Hawkscan
-        uses: stackhawk/hawkscan-action@v2.2.0
+        uses: stackhawk/hawkscan-action@main
         with:
           apiKey: ${{ secrets.HAWK_API_KEY }}
-          configurationFiles: stackhawk.d/stackhawk.yml stackhawk.d/stackhawk-jsv-json-token.yml stackhawk.d/github-tags.yml
+          configurationFiles: stackhawk.yml stackhawk-jsv-json-token.yml github-tags.yml
+          workspace: stackhawk.d
         env:
           APP_ID: fe3b8948-0edb-4fa4-a3b7-6fa200461f78
           ENV: action-scan
@@ -43,10 +44,10 @@ jobs:
           COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           BRANCH_NAME: ${{ github.head_ref }}
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@main
         with:
           # Path to SARIF file relative to the root of the repository
-          sarif_file: stackhawk.sarif
+          sarif_file: stackhawk.d/stackhawk.sarif
           # Optional category for the results
           # Used to differentiate multiple results for one commit
           category: StackHawk
